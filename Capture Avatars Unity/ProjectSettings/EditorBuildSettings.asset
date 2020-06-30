@@ -6,6 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/SampleScene.unity
-    guid: 99c9720ab356a0642a771bea13969a05
+    path: Assets/Scenes/Password.unity
+    guid: d148d3ee79ac18e40b9fb49b0799fa23
+  - enabled: 1
+    path: Assets/Scenes/AvatarCreator.unity
+    guid: f4b2a21f2a47f17448b859bb0534f4de
   m_configObjects: {}
