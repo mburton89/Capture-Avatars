@@ -31,4 +31,24 @@ public class Menu : MonoBehaviour
         yield return new WaitForSeconds(UIAestheticsManager.Instance.secondsToMoveButtons);
         _container.SetActive(false);
     }
+
+    public void Close(UIMovable uIMovable)
+    {
+        StartCoroutine(CloseCo(uIMovable));
+    }
+
+    private IEnumerator CloseCo(UIMovable delayedUiMovable)
+    {
+        foreach (UIMovable uIMovable in _uiMovables)
+        {
+            if (uIMovable != delayedUiMovable)
+            {
+                uIMovable.TweenOffScreen();
+            }
+        }
+        yield return new WaitForSeconds(UIAestheticsManager.Instance.secondsToMoveButtons);
+        delayedUiMovable.TweenOffScreen();
+        yield return new WaitForSeconds(UIAestheticsManager.Instance.secondsToMoveButtons);
+        _container.SetActive(false);
+    }
 }

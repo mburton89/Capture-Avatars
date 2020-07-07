@@ -10,9 +10,10 @@ public class MenuManager : MonoBehaviour
     [SerializeField] private ClosetMenu _closetMenu;
     [SerializeField] private ToggleMenu _closetTopsMenu;
 
-    private Menu _previousMenu;
-    private Menu _previousPreviousMenu;
-    private Menu _currentMenu;
+    [HideInInspector] public Menu previousMenu;
+    [HideInInspector] public Menu currentMenu;
+
+    [SerializeField] private PathMenu _pathMenu;
 
     private void Awake()
     {
@@ -21,50 +22,66 @@ public class MenuManager : MonoBehaviour
 
     private void Start()
     {
-        _currentMenu = _homeMenu;
+        currentMenu = _homeMenu;
         _homeMenu.Open();
     }
 
     public void OpenHomeMenu()
     {
-        _currentMenu.Close();
-        _previousMenu = _currentMenu;
+        currentMenu.Close();
+        previousMenu = currentMenu;
         _homeMenu.Open();
-        _currentMenu = _homeMenu;
+        currentMenu = _homeMenu;
     }
 
     public void OpenClosetMenu()
     {
-        _currentMenu.Close();
-        _previousMenu = _currentMenu;
+        currentMenu.Close();
+        previousMenu = currentMenu;
         _closetMenu.Open();
-        _currentMenu = _closetMenu;
+        currentMenu = _closetMenu;
     }
 
     public void OpenClosetTopsMenu()
     {
-        _currentMenu.Close();
-        _previousMenu = _currentMenu;
+        currentMenu.Close();
+        previousMenu = currentMenu;
         _closetTopsMenu.Open();
-        _currentMenu = _closetTopsMenu;
+        currentMenu = _closetTopsMenu;
     }
 
     public void OpenMenu(Menu menuToOpen)
     {
         StartCoroutine(OpenMenuCo(menuToOpen));
+        _pathMenu.AssignCurrentMenu(menuToOpen);
     }
 
     private IEnumerator OpenMenuCo(Menu menuToOpen)
     {
-        _currentMenu.Close();
-        _previousMenu = _currentMenu;
+        currentMenu.Close();
+        previousMenu = currentMenu;
         yield return new WaitForSeconds(UIAestheticsManager.Instance.secondsToMoveButtons);
-        _currentMenu = menuToOpen;
-        _currentMenu.Open();   
+        currentMenu = menuToOpen;
+        currentMenu.Open();   
+    }
+
+    public void OpenMenu(Menu menuToOpen, UIMovable uIMovable)
+    {
+        StartCoroutine(OpenMenuCo(menuToOpen, uIMovable));
+        _pathMenu.AssignCurrentMenu(menuToOpen);
+    }
+
+    private IEnumerator OpenMenuCo(Menu menuToOpen, UIMovable uIMovable)
+    {
+        currentMenu.Close(uIMovable);
+        previousMenu = currentMenu;
+        yield return new WaitForSeconds(UIAestheticsManager.Instance.secondsToMoveButtons * 2);
+        currentMenu = menuToOpen;
+        currentMenu.Open();
     }
 
     public void GoBack()
     {
-        StartCoroutine(OpenMenuCo(_previousMenu));
+        StartCoroutine(OpenMenuCo(previousMenu));
     }
 }

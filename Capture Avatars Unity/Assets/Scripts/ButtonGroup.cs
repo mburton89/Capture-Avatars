@@ -94,11 +94,9 @@ public class ButtonGroup : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        //_controller.MoveHomeButtonsOffScreen(this);
-        //onClick.Invoke();
         if (_menuToOpen != null)
         {
-            MenuManager.Instance.OpenMenu(_menuToOpen);
+            MenuManager.Instance.OpenMenu(_menuToOpen, GetComponentInChildren<UIMovable>());
         }
         else
         {
