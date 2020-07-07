@@ -50,6 +50,9 @@ TextureImporter:
   - first:
       213: 7525727126161565544
     second: icon-sprite-sheet_7
+  - first:
+      213: 7248058259575695768
+    second: icon-sprite-sheet_8
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -321,6 +324,27 @@ TextureImporter:
       name: icon-sprite-sheet_7
       rect:
         serializedVersion: 2
+        x: 46
+        y: 108
+        width: 29
+        height: 28
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 867a16fb2f0c07860800000000000000
+      internalID: 7525727126161565544
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: icon-sprite-sheet_8
+      rect:
+        serializedVersion: 2
         x: 44
         y: 40
         width: 36
@@ -332,8 +356,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 867a16fb2f0c07860800000000000000
-      internalID: 7525727126161565544
+      spriteID: 8996851d596469460800000000000000
+      internalID: 7248058259575695768
       vertices: []
       indices: 
       edges: []

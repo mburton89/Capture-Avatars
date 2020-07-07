@@ -1,23 +1,16 @@
-﻿
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using TMPro;
 using DG.Tweening;
+using UnityEngine.Events;
 
-public class ButtonGroup : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
+public class MenuButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
 {
     private UIAestheticsManager _controller;
 
-    public UnityEvent onClick;
-
     [SerializeField] private GameObject _container;
-    [SerializeField] private Image _circle;
-    [SerializeField] private Image _shadow;
-    [SerializeField] private Image _icon;
+    [SerializeField] private Image _bg;
     [SerializeField] private Image _raycastTarget;
     [SerializeField] private TextMeshProUGUI _label;
 
@@ -28,8 +21,11 @@ public class ButtonGroup : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     private float _secondsToPressIn;
     private float _secondsToUnpress;
 
-    private Vector3 _initialContainerPosition;
+    private Vector3 _onScreenPosition;
+    private Vector3 _offScreenPosition;
     private Vector3 _initialShadowPosition;
+
+    public UnityEvent onClick;
 
     [SerializeField] private Menu _menuToOpen;
 
@@ -40,61 +36,39 @@ public class ButtonGroup : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         _pressedInScale = _controller.pressedInScale;
         _secondsToPressIn = _controller.secondsToPressIn;
         _secondsToUnpress = _controller.secondsToUnpress;
-        _initialContainerPosition = _container.transform.localPosition;
-        _initialShadowPosition = _shadow.transform.localPosition;
-
-        if (_icon == null)
-        {
-            _textHighlightColor = Color.white;
-        }
-        else
-        {
-            _textHighlightColor = _controller.accentColor;
-        }   
+        _onScreenPosition = _container.transform.localPosition;
     }
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        _circle.color = _accentColor;
-        _label.color = _textHighlightColor;
-        if (_icon != null)
-        {
-            _icon.color = Color.white;
-        }
+        _bg.color = _accentColor;
+        _label.color = Color.white;
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        _circle.color = Color.white;
+        _bg.color = Color.clear;
         _label.color = Color.black;
-        if (_icon != null)
-        {
-            _icon.color = Color.black;
 
-            //TODO remove when implemented all menus
-            if (_menuToOpen == null)
-            {
-                _label.color = Color.grey;
-                _icon.color = Color.grey;
-            }
+        if (_menuToOpen == null)
+        {
+            _label.color = Color.grey;
         }
     }
 
     public void OnPointerDown(PointerEventData eventData)
     {
         transform.DOScale(_pressedInScale, _secondsToPressIn);
-        _shadow.transform.DOLocalMove(Vector3.zero, _secondsToPressIn);
     }
 
     public void OnPointerUp(PointerEventData eventData)
     {
         transform.DOScale(1, _secondsToUnpress);
-        _shadow.transform.DOLocalMove(_initialShadowPosition, _secondsToUnpress);
     }
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        //_controller.MoveHomeButtonsOffScreen(this);
+        //Debug.Log("Open Sub Menu for " + gameObject.name);
         //onClick.Invoke();
         if (_menuToOpen != null)
         {
@@ -110,10 +84,7 @@ public class ButtonGroup : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     public void MoveOffScreen()
     {
         float duration = _controller.secondsToMoveButtons;
-        _container.transform.DOMoveX(-10f, duration);
-        _circle.DOFade(0, duration);
-        _shadow.DOFade(0, duration);
-        _icon.DOFade(0, duration);
+        _bg.DOFade(0, duration);
         _label.DOFade(0, duration);
         _raycastTarget.raycastTarget = false;
     }
@@ -121,10 +92,8 @@ public class ButtonGroup : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     public void MoveOnScreen()
     {
         float duration = _controller.secondsToMoveButtons;
-        _container.transform.localPosition = _initialContainerPosition;
-        _circle.DOFade(1, duration);
-        _shadow.DOFade(1, duration);
-        _icon.DOFade(1, duration);
+        _container.transform.DOMove(_onScreenPosition, duration);
+        _bg.DOFade(1, duration);
         _label.DOFade(1, duration);
         _raycastTarget.raycastTarget = true;
     }

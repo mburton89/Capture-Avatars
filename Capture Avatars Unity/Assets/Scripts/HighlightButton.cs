@@ -1,24 +1,17 @@
 ﻿
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using TMPro;
 using DG.Tweening;
 
-public class ButtonGroup : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
+public class HighlightButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
 {
     private UIAestheticsManager _controller;
 
-    public UnityEvent onClick;
-
-    [SerializeField] private GameObject _container;
     [SerializeField] private Image _circle;
     [SerializeField] private Image _shadow;
     [SerializeField] private Image _icon;
-    [SerializeField] private Image _raycastTarget;
     [SerializeField] private TextMeshProUGUI _label;
 
     private Color _accentColor;
@@ -28,10 +21,8 @@ public class ButtonGroup : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     private float _secondsToPressIn;
     private float _secondsToUnpress;
 
-    private Vector3 _initialContainerPosition;
+    private Vector3 _initialLocalPosition;
     private Vector3 _initialShadowPosition;
-
-    [SerializeField] private Menu _menuToOpen;
 
     public void Init(UIAestheticsManager controller)
     {
@@ -40,7 +31,7 @@ public class ButtonGroup : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         _pressedInScale = _controller.pressedInScale;
         _secondsToPressIn = _controller.secondsToPressIn;
         _secondsToUnpress = _controller.secondsToUnpress;
-        _initialContainerPosition = _container.transform.localPosition;
+        _initialLocalPosition = transform.localPosition;
         _initialShadowPosition = _shadow.transform.localPosition;
 
         if (_icon == null)
@@ -50,7 +41,7 @@ public class ButtonGroup : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         else
         {
             _textHighlightColor = _controller.accentColor;
-        }   
+        }
     }
 
     public void OnPointerEnter(PointerEventData eventData)
@@ -70,13 +61,6 @@ public class ButtonGroup : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         if (_icon != null)
         {
             _icon.color = Color.black;
-
-            //TODO remove when implemented all menus
-            if (_menuToOpen == null)
-            {
-                _label.color = Color.grey;
-                _icon.color = Color.grey;
-            }
         }
     }
 
@@ -95,37 +79,25 @@ public class ButtonGroup : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     public void OnPointerClick(PointerEventData eventData)
     {
         //_controller.MoveHomeButtonsOffScreen(this);
-        //onClick.Invoke();
-        if (_menuToOpen != null)
-        {
-            MenuManager.Instance.OpenMenu(_menuToOpen);
-        }
-        else
-        {
-            Debug.LogWarning("Menu not implemented.");
-            DebugConsole.Instance.ShowMessage("Menu not implemented.");
-        }
     }
 
     public void MoveOffScreen()
     {
         float duration = _controller.secondsToMoveButtons;
-        _container.transform.DOMoveX(-10f, duration);
+        transform.DOMoveX(-10f, duration);
         _circle.DOFade(0, duration);
         _shadow.DOFade(0, duration);
         _icon.DOFade(0, duration);
         _label.DOFade(0, duration);
-        _raycastTarget.raycastTarget = false;
     }
 
     public void MoveOnScreen()
     {
         float duration = _controller.secondsToMoveButtons;
-        _container.transform.localPosition = _initialContainerPosition;
+        transform.localPosition = _initialLocalPosition;
         _circle.DOFade(1, duration);
         _shadow.DOFade(1, duration);
         _icon.DOFade(1, duration);
         _label.DOFade(1, duration);
-        _raycastTarget.raycastTarget = true;
     }
 }
